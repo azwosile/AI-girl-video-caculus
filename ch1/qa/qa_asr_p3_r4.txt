@@ -1,0 +1,6 @@
+OK C05 0.97 | ASR: 可是顺序一换意思全变对任意一个x都存在一个艾姆使得FX的绝对值小于等于艾姆 | 稿: 可是顺序一换，意思全变：对任意一个 x，都存在一个 艾姆，使得 f x 的绝对值小于等于 艾姆。
+      差异: aikesi→x
+⚠ C20 0.76 缺字母 fxxxxxxx | ASR: 比如dex三次方FX二减x二减x二减x二的平方加上x一剩x二x一剩x二x一的平方 | 稿: 比如 x 的三次方：f x 二减 f x 一，可以分解成，x 二减 x 一，再乘以，x 二的平方，加上 x 一乘 x 二，再加上 x 一的平方。
+      差异: aikesi→∅ ∅→x aikesi→x faikesiyikeyifenjiecheng→∅ yizaich→∅ ngy→rj ∅→an c→s z→∅ j→kes a→yi a→e ∅→aikesier
+
+需人工复听 / 重配：C20

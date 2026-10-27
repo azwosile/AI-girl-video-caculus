@@ -1,0 +1,8 @@
+{
+ "H": {"name": "混元", "file": "h_ref.wav", "arena_voice": "voice-06", "text": "算盘一响，账目分明。零点一，零点零一，零点零零一，我每一位都打一遍，一分钱也不会算错。", "voice": "精打细算的账房先生（本课设定）"},
+ "Z": {"name": "GLM", "file": "z_ref.wav", "arena_voice": "voice-07", "text": "您要的精度是零点一？可以呀。不过精度越高，价格也越高哦，先说好，我可从来不做亏本的买卖。", "voice": "精明、爱讨价还价的狐狸女仆"},
+ "R": {"name": "Mistral", "file": "r_ref.wav", "arena_voice": "voice-08", "text": "这个定义，是我们法国的柯西先生最早写出来的。优雅、严谨，就像一根刚出炉的法棍。", "voice": "骄傲优雅的法国骑士（本课设定）"},
+ "T": {"name": "MiMo", "file": "t_ref.wav", "arena_voice": "voice-09", "text": "嘿！看我一跳！咦，落地的地方，和起跳的地方根本连不上嘛！兔兔你说是不是？", "voice": "活泼跳脱（本课设定）"},
+ "L": {"name": "Llama", "file": "l_ref.wav", "arena_voice": "voice-10", "text": "不着急，慢慢走嘛……往右一直走，走到无穷远也没关系。这些都是开源的，随便拿去用吧。", "voice": "慢悠悠、大方（本课设定）"},
+ "N": {"name": "MiniMax", "file": "n_ref.wav", "arena_voice": "voice-11", "text": "咔！慢镜头回放！再慢一点，再慢十倍！好，这一帧，就是我要的瞬间。", "voice": "爱喊“咔”的导演（本课设定）"}
+}

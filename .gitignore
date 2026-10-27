@@ -1,0 +1,43 @@
+# ===== 不入库：版权材料 =====
+/教材PPT/
+# docs/_work：工作草稿，含教材文字摘录
+/docs/_work/
+
+# ===== 不入库：旧版、备份 =====
+/archive/
+**/_bak*/
+*.bak
+*.tgz
+
+# ===== 不入库：渲染输出与成片（成片发布在 GitHub Releases） =====
+**/out/
+/release/
+
+# ===== 不入库：配音生成物（可由 tts_gen.py + 参考音重新生成） =====
+**/vo/
+**/vo48/
+**/vo_try*/
+**/vo_s*/
+**/sfx48/
+/ch2/audio/ref/raw/
+
+# ===== 不入库：build.sh 每次自动复制的副本 =====
+/ch2/p*/web/core.js
+/ch2/p*/web/kit.js
+/ch2/p*/web/scenes0_kit.js
+/ch2/p*/web/sprites/
+/ch2/p*/web/fonts/
+/ch1/p*/web/core.js
+/ch1/p*/web/kit.js
+/ch1/p*/web/fonts/
+/ch1/p[013-7]/web/sprites/
+# ch1/p2/web/sprites/ 是第 1 章立绘的源目录，保留
+
+# ===== 不入库：日志、缓存、QA 抽帧 =====
+*.log
+__pycache__/
+node_modules/
+/ch2/qa/frames/
+**/chk/
+.DS_Store
+Thumbs.db

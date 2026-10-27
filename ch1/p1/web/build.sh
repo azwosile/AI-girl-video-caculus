@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# 微积分课 ch1 · P1 高中速通 一键：裁音 → 渲染 → 混音 → 成片（core.js 从 ch1/shared 同步）
+set -e
+cd "$(dirname "$0")"
+PY=/e/AI/TTS/GPT-SoVITS-v2pro-20261006nvidia50x0/runtime/python.exe
+export EP_DIR="$(cd .. && (pwd -W 2>/dev/null || pwd))"
+export PYTHONIOENCODING=utf-8
+cp ../../shared/core.js core.js
+mkdir -p out
+[ "$SKIP_PREP" = 1 ] || $PY ../../web/prep.py
+uv run --quiet --with playwright --with pillow python render.py --channel chrome "$@" 2>&1 | grep -v "GET /"
+$PY ../../web/mix.py
+OUT="out/AI娘微积分课_第1章_P1_高中速通.mp4"
+ffmpeg -loglevel error -y -i out/video.mp4 -i out/mix.wav -c:v copy -c:a aac -b:a 192k -af "loudnorm=I=-16:TP=-1.5:LRA=11" -ar 48000 -shortest "$OUT"
+ffmpeg -loglevel error -y -i "$OUT" -vf scale=1280:720 -c:v libx264 -preset medium -crf 23 -c:a aac -b:a 128k out/preview_720p.mp4
+ls -l out
