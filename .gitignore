@@ -41,3 +41,12 @@ node_modules/
 **/chk/
 .DS_Store
 Thumbs.db
+
+# 第 3 章：build.sh 每次自动复制的副本
+/ch3/p*/web/core.js
+/ch3/p*/web/kit.js
+/ch3/p*/web/scenes0_kit.js
+/ch3/p*/web/render.py
+/ch3/p*/web/sprites/
+/ch3/p*/web/fonts/
+/ch3/qa/try/
