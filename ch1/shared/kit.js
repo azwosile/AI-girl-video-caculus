@@ -234,6 +234,7 @@ function composeFrame(t, SC, titles) {
   if (titles) blockTitle(t, titles);
   if (!SC.__noTag || t < SC.__noTag) chapterTag(t, SEG.tag, SEG.title);
   subtitle(t);
+  if (window.RELAY_ON) return;   // 段间接力接管首尾，不再淡入淡出黑场
   const fi = prog(t, 0, 0.5); if (fi < 1) { ctx.fillStyle = `rgba(5,7,15,${1 - fi})`; ctx.fillRect(0, 0, W, H); }
   const fo = prog(t, TOTAL - 0.6, 0.6); if (fo > 0) { ctx.fillStyle = `rgba(5,7,15,${fo})`; ctx.fillRect(0, 0, W, H); }
 }
