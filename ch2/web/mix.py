@@ -31,7 +31,7 @@ duck = 1 - 0.6 * np.clip(lv / 0.12, 0, 1)
 a = np.exp(-64 / (0.15 * SR)); env = np.empty_like(duck); s = 1.0
 for i in range(0, N, 64): s = a * s + (1 - a) * duck[i]; env[i:i + 64] = s
 envd = env.copy()  # 未做首尾淡入淡出的闪避包络（0.4~1）
-fade = int(0.5 * SR); env[:fade] *= np.linspace(0, 1, fade); env[-int(2 * SR):] *= np.linspace(1, 0, int(2 * SR))
+fade = int(1.2 * SR); env[:fade] *= np.linspace(0, 1, fade); env[-int(2 * SR):] *= np.linspace(1, 0, int(2 * SR))
 mix = vo + fx + bg * 0.30 * env[:, None]   # 授权曲已在 prep 统一到 RMS 0.12；“稍微配一下”
 mix = np.tanh(mix * 1.1) / np.tanh(1.1); mix *= 0.95 / max(1e-6, np.abs(mix).max())
 sf.write(EP / 'web' / 'out' / 'mix.wav', mix, SR, subtype='PCM_16'); print('mix', round(N / SR, 2), 's')

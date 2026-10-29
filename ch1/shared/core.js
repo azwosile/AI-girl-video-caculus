@@ -422,67 +422,94 @@ function computePulse(t) {
   let p = 0; for (const [ht, g] of computePulse.H) { if (t >= ht && t < ht + 1.2) p += g * Math.exp(-(t - ht) * 5); }
   PULSE = Math.min(1.2, p);
 }
-
 // ================= 段间接力（10-28）=================
-// 每段开头 = “接棒卡”，结尾 = “接力卡”，两张卡用同一条章节路线图。
-// 上一段最后一帧 = 下一段第一帧，合集无损拼接时画面自然相接；单独看某一段时，开头也能看出自己在第几段。
-// 实现方式是在 finalize 里做时间重映射：u = t − LEAD 是原时间轴；最后一句说完后（TE）冻结原画面并叠加接力卡，
-// 原片尾（字幕卡 / 署名卡）不再出现；人声和音效统一平移 LEAD。各段的 scenes.js 不需要改。
+// 每段开头 = “接棒卡”，结尾 = “接力卡”，两张卡共用同一条章节路线图；上一段最后一帧 = 下一段第一帧。
+// 合集无损拼接时画面自然相接；单独看某一段，开头就能看出自己在第几段。
+// 实现方式是在 finalize 里做时间重映射：u = t − LEAD 是原时间轴；TE 之后冻结原画面并叠加接力卡。
+// 原片尾（字幕卡 / 署名卡）因此不再出现；人声和音效统一平移 LEAD。各段的 scenes.js 不需要改。
+// 章末段：TE 取原署名开始前（保留全员合影），完整署名改由接力卡显示（自动捕获该段 credits() 的参数）。
+// 章节信息：路线图节点名（segs）、大标题全名（full，可省）、下一章、页脚署名（每段都有）、章末完整署名（credits，可省：省略时取章末段 credits() 的参数）
 const CHAPTER = {
-  n: 1, title: '函数与模型',
-  segs: ['画不出来的函数', '高中速通', '映射', '函数性质', '复合与反函数', '反三角函数', '指数、e 与增长', '收束'],
-  next: { tag: '第 2 章', name: '极限与导数' },
-  footer: '立绘设定：ZipZipPipe / ai-girls　·　BGM：“Easy Lemon” Kevin MacLeod (incompetech.com) CC BY 4.0　·　仅供非商业学习交流',
-  credits: [
-    'Claude / GPT 等 AI 娘形象：ZipZipPipe（Pixiv 148186519）；DeepSeek 娘：上善无形 + ZipZipPipe；Gemini 娘立绘：ZipZipPipe。',
-    '作者说明允许分享与再创作，但无统一标准许可证；本片仅按非商用方式使用。',
-    'DeepSeek 娘形象 CC BY-NC-SA 4.0；大肥鱼声音：尹紫鹭幻想社数据集（CC BY-NC 4.0）。',
-    'Claude、GPT、Gemini 等名称与商标归各自权利人；本片为非官方、非商业学习作品。',
-  ],
+ "n": 1,
+ "title": "函数与模型",
+ "segs": [
+  "画不出来的函数",
+  "高中速通",
+  "映射",
+  "函数性质",
+  "复合与反函数",
+  "反三角函数",
+  "指数、e 与增长",
+  "收束"
+ ],
+ "next": {
+  "tag": "第 2 章",
+  "name": "极限与导数"
+ },
+ "footer": [
+  "立绘：ZipZipPipe（ai-girls）；DeepSeek 娘：上善无形 + ZipZipPipe（CC BY-NC-SA 4.0）；大肥鱼声音：尹紫鹭幻想社数据集（CC BY-NC 4.0）",
+  "BGM：“Easy Lemon” Kevin MacLeod (incompetech.com) CC BY 4.0；名称与商标归各自权利人；非官方、非商业学习作品，完整署名见章末"
+ ],
+ "credits": [
+  "Claude / GPT 等 AI 娘形象：ZipZipPipe（Pixiv 148186519）；DeepSeek 娘：上善无形 + ZipZipPipe；Gemini 娘立绘：ZipZipPipe。",
+  "作者说明允许分享与再创作，但无统一标准许可证；本片仅按非商用方式使用。",
+  "DeepSeek 娘形象 CC BY-NC-SA 4.0；大肥鱼声音：尹紫鹭幻想社数据集（CC BY-NC 4.0）。",
+  "音乐：“Easy Lemon” Kevin MacLeod (incompetech.com)，Licensed under CC BY 4.0。",
+  "Claude、GPT、Gemini 等名称与商标归各自权利人；本片为非官方、非商业学习作品。"
+ ]
 };
 window.RELAY_ON = true;
 const RELAY = (() => {
   const cur = parseInt(String(SEG.tag).replace(/\D/g, '')) || 0, last = cur === CHAPTER.segs.length - 1;
   const lastV = ENTRIES.filter(e => e.k === 'v').pop();
   const lead = cur === 0 ? 2.0 : 1.5, te = lastV.vo + lastV.dur + 0.15, out = last ? 7.0 : 3.6;
-  return { cur, last, lead, te, out, total: lead + te + out };
+  return { cur, last, lead, te, out, total: lead + te + out, cred: CHAPTER.credits || null };
 })();
-const REL_X = i => 960 + (i - 3.5) * 175, REL_Y = 520;
+function relayInit() {   // 章末段：捕获原片尾 credits() 的起点与署名行
+  if (!RELAY.last || typeof credits !== 'function') return;
+  const orig = credits; let cap = null;
+  credits = (t, t0, head, next, lines) => { cap = { t0, lines }; };
+  ctx.save(); try { drawFrame(TOTAL - 1e-3); } catch (e) { } ctx.restore(); credits = orig;
+  if (cap) { RELAY.te = Math.max(RELAY.te, cap.t0 - 0.05); RELAY.cred = cap.lines; }
+  RELAY.total = RELAY.lead + RELAY.te + RELAY.out;
+}
+const REL_SP = Math.min(175, 1700 / (CHAPTER.segs.length + 1));
+const REL_X = i => 960 + (i - (CHAPTER.segs.length - 1) / 2) * REL_SP, REL_Y = 520;
 function relayCheck(x, y, s, a) { glowPath(() => { ctx.moveTo(x - s * 0.45, y); ctx.lineTo(x - s * 0.1, y + s * 0.35); ctx.lineTo(x + s * 0.5, y - s * 0.35); }, COL.ink, 4, a); }
-// 画路线图。done = 已完成段数（下标 < done 的点为金色）；lit = 高亮点下标；comet = [from, to, p]；k = 整体透明度
-function relayRail(t, done, lit, comet, k, pulse = 0, nx = 0) {   // nx = 下一章节点的透明度（只在章末段的接力卡里淡入）
-  const n = CHAPTER.segs.length, nodes = nx > 0 ? n + 1 : n;
+function relayFit(s, sz, maxW, bold, font) { ctx.font = `${bold ? 'bold ' : ''}${sz}px ${font}`; const w = ctx.measureText(s).width; if (w > maxW) ctx.font = `${bold ? 'bold ' : ''}${Math.floor(sz * maxW / w)}px ${font}`; }
+// done = 已完成段数（下标 < done 的点为金色）；lit = 高亮点；comet = [from, to, p]；nx = 下一章节点透明度（只在章末接力卡淡入）
+function relayRail(t, done, lit, comet, k, pulse = 0, nx = 0) {
+  const n = CHAPTER.segs.length, nodes = nx > 0 ? n + 1 : n, rr = Math.min(16, REL_SP * 0.18);
   ctx.save(); ctx.globalAlpha *= k;
   for (let i = 0; i < nodes - 1; i++) {
-    const x0 = REL_X(i) + 20, x1 = REL_X(i + 1) - 20, gold = i + 1 < done || (i + 1 === done && i + 1 <= lit);
+    const x0 = REL_X(i) + rr + 4, x1 = REL_X(i + 1) - rr - 4, gold = i + 1 < done || (i + 1 === done && i + 1 <= lit);
     ctx.save(); if (i + 1 === n) ctx.globalAlpha *= nx;
     glowPath(() => { ctx.moveTo(x0, REL_Y); ctx.lineTo(x1, REL_Y); }, gold ? GOLD : 'rgba(237,230,216,0.22)', gold ? 3 : 2, gold ? 0.9 : 1); ctx.restore();
   }
   if (comet) {
-    const [f, to, p] = comet, x0 = REL_X(f) + 20, x = lerp(x0, REL_X(to) - 20, eIO(p));
+    const [f, to, p] = comet, x0 = REL_X(f) + rr + 4, x = lerp(x0, REL_X(to) - rr - 4, eIO(p));
     if (p > 0) { glowPath(() => { ctx.moveTo(x0, REL_Y); ctx.lineTo(x, REL_Y); }, CYAN, 3.5, 1); if (p < 1) glowDot(x, REL_Y, 9, '#ffffff', 1); }
   }
   for (let i = 0; i < nodes; i++) {
-    const x = REL_X(i), isNext = i === n, on = i === lit, ok = i < done;
-    const r = on ? 22 + 8 * pulse : 16;
+    const x = REL_X(i), isNext = i === n, on = i === lit, ok = i < done, r = on ? rr + 6 + 8 * pulse : rr;
     ctx.save(); if (isNext) ctx.globalAlpha *= nx;
-    if (ok) { ctx.fillStyle = GOLD; ctx.shadowColor = GOLD; ctx.shadowBlur = 14; ctx.beginPath(); ctx.arc(x, REL_Y, 16, 0, 7); ctx.fill(); ctx.restore(); relayCheck(x, REL_Y, 18, 1); ctx.save(); }
+    if (ok) { ctx.fillStyle = GOLD; ctx.shadowColor = GOLD; ctx.shadowBlur = 14; ctx.beginPath(); ctx.arc(x, REL_Y, rr, 0, 7); ctx.fill(); ctx.shadowBlur = 0; relayCheck(x, REL_Y, rr * 1.1, 1); }
     else { ctx.strokeStyle = on ? CYAN : 'rgba(237,230,216,0.35)'; ctx.lineWidth = on ? 4 : 2.5; ctx.shadowColor = CYAN; ctx.shadowBlur = on ? 22 : 0;
       if (isNext) ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.arc(x, REL_Y, r, 0, 7); ctx.stroke(); ctx.setLineDash([]);
       if (on) { ctx.fillStyle = hexA(CYAN, 0.25); ctx.fill(); } }
     ctx.restore();
     ctx.save(); if (isNext) ctx.globalAlpha *= nx; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.font = `${on ? 'bold ' : ''}26px ${F_FANCY}`; ctx.fillStyle = on ? CYAN : ok ? GOLD : 'rgba(237,230,216,0.45)';
+    relayFit(isNext ? CHAPTER.next.tag : `P${i}`, 26, REL_SP - 6, on, F_FANCY); ctx.fillStyle = on ? CYAN : ok ? GOLD : 'rgba(237,230,216,0.45)';
     ctx.fillText(isNext ? CHAPTER.next.tag : `P${i}`, x, REL_Y - 52);
-    ctx.font = `${on ? 'bold ' : ''}22px ${F_BODY}`; ctx.fillStyle = on ? COL.cream : ok ? 'rgba(237,230,216,0.8)' : 'rgba(237,230,216,0.4)';
-    ctx.fillText(isNext ? CHAPTER.next.name : CHAPTER.segs[i], x, REL_Y + 54);
+    const nm = isNext ? CHAPTER.next.name : CHAPTER.segs[i];
+    relayFit(nm, 22, REL_SP - 10, on, F_BODY); ctx.fillStyle = on ? COL.cream : ok ? 'rgba(237,230,216,0.8)' : 'rgba(237,230,216,0.4)';
+    ctx.fillText(nm, x, REL_Y + 54);
     ctx.restore();
   }
   ctx.restore();
 }
-// 接力卡与接棒卡共用的版面；label：“下一段 / 下一章”；ta = 标题出现时刻（负数 = 已完整显示）
 function relayCard(t, o) {
-  const { bg, done, lit, comet, label, labelA = 1, title, ta, pulse = 0, rise = 0, credits = 0, nx = 0 } = o;
+  const { bg, done, lit, comet, label, labelA = 1, title, ta, pulse = 0, rise = 0, credits: cr = 0, nx = 0 } = o;
   ctx.save(); ctx.globalAlpha = bg; ctx.fillStyle = '#05070f'; ctx.fillRect(0, 0, W, H); ctx.restore();
   if (bg <= 0.01) return;
   ctx.save(); ctx.globalAlpha *= bg; ctx.translate(0, -rise);
@@ -491,12 +518,15 @@ function relayCard(t, o) {
   relayRail(t, done, lit, comet, 1, pulse, nx);
   if (label && labelA > 0) { ctx.save(); ctx.globalAlpha *= labelA; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `30px ${F_BODY}`; ctx.fillStyle = CYAN; ctx.fillText(label, 960, 690); ctx.restore(); }
   if (title) glowText(title, 960, 775, 64, COL.cream, t, ta, { align: 'center' });
-  if (credits > 0) { ctx.save(); ctx.globalAlpha *= credits; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `20px ${F_BODY}`; ctx.fillStyle = 'rgba(237,230,216,0.75)';
-    CHAPTER.credits.forEach((s, i) => ctx.fillText(s, 960, 868 + i * 30)); ctx.restore(); }
-  ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `22px ${F_BODY}`; ctx.fillStyle = 'rgba(237,230,216,0.55)'; ctx.fillText(CHAPTER.footer, 960, 1010); ctx.restore();
+  const CL = RELAY.cred || [];
+  if (cr > 0 && CL.length) { ctx.save(); ctx.globalAlpha *= cr; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = 'rgba(237,230,216,0.78)';
+    CL.forEach((s, i) => { relayFit(s, 19, 1800, false, F_BODY); ctx.fillText(s, 960, 852 + i * 27); }); ctx.restore(); }
+  const FL = [].concat(CHAPTER.footer);
+  ctx.save(); ctx.globalAlpha *= 1 - cr; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = 'rgba(237,230,216,0.55)';
+  FL.forEach((s, i) => { relayFit(s, 20, 1820, false, F_BODY); ctx.fillText(s, 960, 1006 - (FL.length - 1 - i) * 32); }); ctx.restore();
   ctx.restore();
 }
-const relayTitle = i => i >= CHAPTER.segs.length ? `${CHAPTER.next.tag}　${CHAPTER.next.name}` : `P${i}　${CHAPTER.segs[i]}`;
+const relayTitle = i => i >= CHAPTER.segs.length ? `${CHAPTER.next.tag}　${CHAPTER.next.name}` : `P${i}　${(CHAPTER.full || CHAPTER.segs)[i]}`;
 function relayOverlay(t) {
   const R = RELAY, c = R.cur;
   if (t < R.lead + 0.3) {   // 接棒卡：第一帧与上一段最后一帧一致，然后淡出露出本段
@@ -522,13 +552,17 @@ function relaySfx() {
   if (R.last) add(a + 2.6, 'swell', 0.26);
   return keep.sort((x, y) => x.t - y.t);
 }
+function relayExport() {
+  const L = RELAY.lead;
+  window.TIMELINE = { total: RELAY.total, seq: ENTRIES.filter(e => e.k === 'v').map(e => ({ id: e.id, t0: e.t0 + L, vo: e.vo + L, dur: e.dur, t1: e.t1 + L })), blocks: BLOCKS.map(b => ({ b: b.b, t0: b.t0 + L, t1: b.t1 + L })), sfx: relaySfx(), relay: { lead: L, te: RELAY.te, out: RELAY.out } };
+}
 function finalize() {   // scenes.js 最后调用：导出时间轴、渲染入口（含段间接力的时间重映射）
   SFX.sort((a, b) => a.t - b.t);
-  const R = RELAY, L = R.lead;
-  window.TIMELINE = { total: R.total, seq: ENTRIES.filter(e => e.k === 'v').map(e => ({ id: e.id, t0: e.t0 + L, vo: e.vo + L, dur: e.dur, t1: e.t1 + L })), blocks: BLOCKS.map(b => ({ b: b.b, t0: b.t0 + L, t1: b.t1 + L })), sfx: relaySfx(), relay: { lead: L, te: R.te, out: R.out } };
+  relayExport();
   window.renderAt = function (t) {
+    const R = RELAY;
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.shadowBlur = 0; ctx.setLineDash([]); ctx.globalCompositeOperation = 'source-over';
-    const u = Math.min(Math.max(t - L, 0), R.te);
+    const u = Math.min(Math.max(t - R.lead, 0), R.te);
     ctx.clearRect(0, 0, W, H); computePulse(u); drawFrame(u);
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.setLineDash([]); ctx.globalCompositeOperation = 'source-over';
     relayOverlay(t);
@@ -536,7 +570,8 @@ function finalize() {   // scenes.js 最后调用：导出时间轴、渲染入�
   window.ready = (async () => {
     await Promise.all(SPR_NAMES.map(loadImg));
     await document.fonts.load(`80px "Smiley"`, (SEG.fontWarm || '高中速通映射') + CHAPTER.segs.join('') + CHAPTER.next.name + '开始下一段章'); await document.fonts.ready;
+    relayInit(); relayExport();
     window.renderAt(0); return true;
   })();
-  if (!window.__EXPORT__) window.ready.then(() => { const t0 = performance.now(); (function loop() { window.renderAt(((performance.now() - t0) / 1000) % R.total); requestAnimationFrame(loop); })(); });
+  if (!window.__EXPORT__) window.ready.then(() => { const t0 = performance.now(); (function loop() { window.renderAt(((performance.now() - t0) / 1000) % RELAY.total); requestAnimationFrame(loop); })(); });
 }

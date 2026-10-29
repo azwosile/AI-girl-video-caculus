@@ -1,4 +1,4 @@
-# 创建 chN-v1.0 Release（用法：gh_release.py 3） 并上传合集与分段成片（凭据取自 Git Credential Manager，不落盘、不打印）
+# 创建 chN-vX Release（用法：gh_release.py 3；VER=v1.1 gh_release.py 1 发新版本） 并上传合集与分段成片（凭据取自 Git Credential Manager，不落盘、不打印）
 import json, subprocess, os, sys, time, requests
 ROOT = 'E:/AI/AI娘课程/AI娘微积分课'; REPO = 'azwosile/AI-girl-video-caculus'
 GCM = 'D:/DeepSeek Harness WorkSpace/ShunCode/resources/app/extensions/shuncode/runtime/git/mingw64/bin/git-credential-manager.exe'
@@ -12,10 +12,12 @@ info = json.load(open(ROOT + '/release/release_info.json', encoding='utf-8'))
 TITLE = {'1': '第 1 章 · 函数与模型', '2': '第 2 章 · 极限与导数', '3': '第 3 章 · 求导法则', '4': '第 4 章 · 导数的应用'}
 def mmss(s): s = int(round(s)); return f'{s // 60}:{s % 60:02d}'
 def mm(s): s = int(round(s)); return f'{s // 60}′{s % 60:02d}″'
+VER = os.environ.get('VER', 'v1.0')
+CHANGES = {'v1.1': '**v1.1 更新**：加入段间衔接。每段开头是接棒卡、结尾是接力卡，两张卡共用一条章节路线图，上一段的最后一帧就是下一段的第一帧。原来每段末尾的署名卡改为页脚一行，完整署名放在章末段。台词与配音不变。\n\n'}
 for ch in sys.argv[1:] or ['1', '2']:
-    I = info[ch]; tag = f'ch{ch}-v1.0'
+    I = info[ch]; tag = f'ch{ch}-{VER}'
     rows = '\n'.join(f"| {mmss(g['start'])} | {g['name'].split('_', 1)[0]} | {g['name'].split('_', 1)[1]} | {g['dur']:.1f} s | `ch{ch}-{g['name'].split('_', 1)[0]}.mp4` |" for g in I['segs'])
-    body = f"""AI娘微积分课 **{TITLE[ch]}**，共 {len(I['segs'])} 段，总长 {mm(I['sum'])}（{I['sum']:.1f} s）。1080p30，H.264 + AAC 48 kHz，响度 −16 LUFS。
+    body = CHANGES.get(VER, '') + f"""AI娘微积分课 **{TITLE[ch]}**，共 {len(I['segs'])} 段，总长 {mm(I['sum'])}（{I['sum']:.1f} s）。1080p30，H.264 + AAC 48 kHz，响度 −16 LUFS。
 
 - `calculus-ch{ch}-full.mp4`：整章合集，各段无损拼接，带章节标记（播放器里可以按段跳转）
 - `ch{ch}-PN.mp4`：分段成片
@@ -28,7 +30,7 @@ for ch in sys.argv[1:] or ['1', '2']:
     r = S.get(f'https://api.github.com/repos/{REPO}/releases/tags/{tag}')
     if r.status_code == 200: rel = r.json(); S.patch(rel['url'], json={'body': body}); log(tag, 'exists', rel['id'])
     else:
-        r = S.post(f'https://api.github.com/repos/{REPO}/releases', json={'tag_name': tag, 'target_commitish': 'main', 'name': f'AI娘微积分课 {TITLE[ch]}', 'body': body})
+        r = S.post(f'https://api.github.com/repos/{REPO}/releases', json={'tag_name': tag, 'target_commitish': 'main', 'name': f'AI娘微积分课 {TITLE[ch]}' + ('' if VER == 'v1.0' else f'（{VER}）'), 'body': body, 'make_latest': 'true' if VER == 'v1.0' else 'false'})
         if r.status_code >= 300: log(tag, 'CREATE FAIL', r.status_code, r.text[:300]); continue
         rel = r.json(); log(tag, 'created', rel['id'])
     have = {a['name']: a for a in S.get(rel['url'] + '/assets?per_page=100').json()}
