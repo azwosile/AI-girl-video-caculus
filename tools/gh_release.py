@@ -9,7 +9,7 @@ TOK = dict(l.split('=', 1) for l in out.splitlines() if '=' in l).get('password'
 if not TOK: log('NO TOKEN'); sys.exit(1)
 S = requests.Session(); S.headers.update({'Authorization': f'Bearer {TOK}', 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'})
 info = json.load(open(ROOT + '/release/release_info.json', encoding='utf-8'))
-TITLE = {'1': '第 1 章 · 函数与模型', '2': '第 2 章 · 极限与导数', '3': '第 3 章 · 求导法则', '4': '第 4 章 · 导数的应用'}
+TITLE = {'1': '第 1 章 · 函数与模型', '2': '第 2 章 · 极限与导数', '3': '第 3 章 · 求导法则', '4': '第 4 章 · 导数的应用', '5': '第 5 章 · 积分'}
 def mmss(s): s = int(round(s)); return f'{s // 60}:{s % 60:02d}'
 def mm(s): s = int(round(s)); return f'{s // 60}′{s % 60:02d}″'
 VER = os.environ.get('VER', 'v1.0')

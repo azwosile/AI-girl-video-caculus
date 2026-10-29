@@ -1,0 +1,122 @@
+[
+ {
+  "id": "C01",
+  "b": "rule",
+  "spk": "C",
+  "pose": "c_explain",
+  "sub": "乘积法则倒过来：(uv)′ = u′v + uv′，两边积分：∫ u dv = uv − ∫ v du。",
+  "tts": "把乘积法则倒过来，两边积分，就得到分部积分公式：u d v 的积分，等于 u v，减去 v d u 的积分。"
+ },
+ {
+  "id": "B01",
+  "b": "try",
+  "spk": "B",
+  "pose": "b_proud",
+  "sub": "家人们，∫ x sin x dx 我来！u = sin x，dv = x dx……",
+  "tts": "家人们，x 乘正弦 x 的积分，我来！u 选正弦 x，d v 选 x d x……"
+ },
+ {
+  "id": "B02",
+  "b": "try",
+  "spk": "B",
+  "pose": "b_proud",
+  "sub": "= (x²/2) sin x − ∫ (x²/2) cos x dx……咦，怎么越积越难？",
+  "tts": "等于二分之 x 平方乘正弦 x，再减去……咦，怎么越积越难了？"
+ },
+ {
+  "id": "B03",
+  "b": "try",
+  "spk": "B",
+  "pose": "b_sorry",
+  "sub": "刚才随手选的，对不起啦！",
+  "tts": "刚才随手选的，对不起啦！"
+ },
+ {
+  "id": "C02",
+  "b": "try",
+  "spk": "C",
+  "pose": "c_explain",
+  "sub": "换过来：u = x，dv = sin x dx，于是 du = dx，v = −cos x。",
+  "tts": "换过来：u 选 x，d v 选正弦 x d x。"
+ },
+ {
+  "id": "C03",
+  "b": "try",
+  "spk": "C",
+  "pose": "c_point",
+  "sub": "= −x cos x + ∫ cos x dx = −x cos x + sin x + C。",
+  "tts": "结果是负 x 余弦 x，加上正弦 x，再加 C。"
+ },
+ {
+  "id": "G01",
+  "b": "try",
+  "spk": "G",
+  "pose": "gp_explain",
+  "sub": "选 u 的顺口溜：反、对、幂、三、指——排在前面的优先当 u。",
+  "tts": "选 u 有个顺口溜：反、对、幂、三、指，排在前面的，优先当 u。"
+ },
+ {
+  "id": "C04",
+  "b": "more",
+  "spk": "C",
+  "pose": "c_explain",
+  "sub": "∫ ln x dx：u = ln x，dv = dx，= x ln x − x + C。",
+  "tts": "自然对数 x 的积分：u 选自然对数 x，d v 选 d x，结果是 x 乘自然对数 x，减 x，加 C。"
+ },
+ {
+  "id": "C05",
+  "b": "more",
+  "spk": "C",
+  "pose": "c_point",
+  "sub": "定积分也能分部：∫₀¹ arctan x dx = [x arctan x]₀¹ − ∫₀¹ x/(1 + x²) dx = π/4 − (1/2) ln 2。",
+  "tts": "定积分也能分部：反正切 x 从零积到一，结果是四分之派，减去二分之一乘二的自然对数。"
+ },
+ {
+  "id": "B04",
+  "b": "more",
+  "spk": "B",
+  "pose": "b_wave",
+  "sub": "需要我帮你把这个顺口溜做成表情包吗？",
+  "tts": "需要我帮你把这个顺口溜做成表情包吗？"
+ },
+ {
+  "id": "C06",
+  "b": "quiz",
+  "spk": "C",
+  "pose": "c_cool",
+  "sub": "随堂一题，三秒。",
+  "tts": "随堂一题，三秒。"
+ },
+ {
+  "id": "C07",
+  "b": "quiz",
+  "spk": "C",
+  "pose": "c_explain",
+  "sub": "∫ x eˣ dx = ？",
+  "tts": "x 乘 e 的 x 次方，积分是多少？"
+ },
+ {
+  "id": "D01",
+  "b": "quiz",
+  "spk": "D",
+  "pose": "d_sparkle",
+  "sub": "u = x，dv = eˣ dx：x eˣ − eˣ + C = (x − 1)eˣ + C！",
+  "tts": "u 选 x：结果是 x 减一，乘 e 的 x 次方，加 C！"
+ },
+ {
+  "id": "C08",
+  "b": "outro",
+  "spk": "C",
+  "pose": "c_ok",
+  "sub": "对。这一段：∫ u dv = uv − ∫ v du，选 u 看“反对幂三指”。",
+  "tts": "对。这一段：分部积分，u d v 等于 u v 减 v d u；选 u，看反对幂三指。"
+ },
+ {
+  "id": "C09",
+  "b": "outro",
+  "spk": "C",
+  "pose": "c_cool",
+  "sub": "下一段：反常积分初步。",
+  "tts": "下一段：反常积分初步。"
+ }
+]

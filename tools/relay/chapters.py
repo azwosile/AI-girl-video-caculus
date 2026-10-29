@@ -21,14 +21,17 @@ CH = {
          full=['区间测速', '高中速通', '极值与最值', '罗尔与拉格朗日', '恒等式与不等式', '单调、凹凸与拐点', '参数方程与莱布尼茨公式', '柯西中值定理与洛必达法则', '∞/∞ 与增长赛跑', '其他未定式与第二个重要极限',
                '数列极限', '等价无穷小', '泰勒公式初步', '描绘曲线', '优化问题', '牛顿法', '原函数与不定积分', '收束与出口票'],
          next={'tag': '第 5 章', 'name': '积分'}, footer=F2),
+ 5: dict(n=5, title='积分', segs=['切抛物线', '高中速通', '上和下和', '速度路程', '定积分', '中点性质', '积分中值', '面积函数', '变限求导', '牛-莱公式', '净变化', '凑微分', '定积分换元', '三角代换', '分部积分', '反常积分', '收束'],
+         full=['阿基米德切抛物线', '高中速通', '上和与下和', '速度表算路程', '定积分的定义', '中点法则与积分性质', '积分中值定理', '面积函数', '变限积分求导', '牛顿–莱布尼茨公式', '不定积分与净变化', '换元法：凑微分', '定积分换元与对称性', '三角代换', '分部积分', '反常积分初步', '收束与出口票'],
+         next={'tag': '第 6 章', 'name': '积分的应用'}, footer=F2, src=4),
 }
 M = open('relay_module.js', encoding='utf-8').read()
 import sys, os
 for n, c in CH.items():
     # 源是接力前的内核（提交 b852583 的 chN/shared/core.js），可用 git show 导出后把 SRC_ROOT 指向该目录
-    src = open(f"{os.environ.get('SRC_ROOT', '.')}/ch{n}/shared/core.js", encoding='utf-8').read()
+    src = open(f"{os.environ.get('SRC_ROOT', '.')}/ch{c.get('src', n)}/shared/core.js", encoding='utf-8').read()
     i = src.index('function finalize() {'); head = src[:i]
     tail = src[i:]; assert tail.rstrip().endswith('}') and tail.count('\nfunction ') == 0, n
-    block = '// 章节信息：路线图节点名（segs）、大标题全名（full，可省）、下一章、页脚署名（每段都有）、章末完整署名（credits，可省：省略时取章末段 credits() 的参数）\nconst CHAPTER = ' + json.dumps(c, ensure_ascii=False, indent=1) + ';'
+    block = '// 章节信息：路线图节点名（segs）、大标题全名（full，可省）、下一章、页脚署名（每段都有）、章末完整署名（credits，可省：省略时取章末段 credits() 的参数）\nconst CHAPTER = ' + json.dumps({k: v for k, v in c.items() if k != 'src'}, ensure_ascii=False, indent=1) + ';'
     open(f'core_ch{n}.js', 'w', encoding='utf-8').write(head + M.replace('/*__CHAPTER__*/', block))
     print(n, len(c['segs']), round(min(175, 1700 / (len(c['segs']) + 1)), 1))
