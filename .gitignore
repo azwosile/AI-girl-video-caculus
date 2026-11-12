@@ -109,3 +109,13 @@ Thumbs.db
 /ch8/qa/try/
 /ch8/qa/*.jpg
 /docs/_work/ch8pages/
+/ch9/p*/web/core.js
+/ch9/p*/web/kit.js
+/ch9/p*/web/scenes0_kit.js
+/ch9/p*/web/render.py
+/ch9/p*/web/sprites/
+/ch9/p*/web/fonts/
+/ch9/qa/try/
+/ch9/qa/*.jpg
+/docs/_work/ch9pages/
+/ch9/qa/pdf/

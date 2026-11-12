@@ -1,0 +1,10 @@
+BGM（当前）：bgm.mp3
+"Easy Lemon" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/
+来源：https://incompetech.com/music/royalty-free/mp3-royaltyfree/Easy%20Lemon.mp3
+时长 126 s，约 112 BPM；prep.py 归一到 RMS 0.12，mix.py ×0.30 + 人声闪避，超过曲长时 2 s 交叉淡化循环。
+
+历史：P0 v2 用过 "Floating Cities" Kevin MacLeod (incompetech.com), CC BY 4.0（10-26 按反馈换成更轻松的曲目）。
+备选（同为 CC BY 4.0）：Wallpaper、Lobby Time、Daily Beetle。
+片尾必须署名。
