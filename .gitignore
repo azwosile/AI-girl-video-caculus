@@ -100,3 +100,12 @@ Thumbs.db
 /ch7/qa/try/
 /ch7/qa/*.jpg
 /docs/_work/ch7pages/
+/ch8/p*/web/core.js
+/ch8/p*/web/kit.js
+/ch8/p*/web/scenes0_kit.js
+/ch8/p*/web/render.py
+/ch8/p*/web/sprites/
+/ch8/p*/web/fonts/
+/ch8/qa/try/
+/ch8/qa/*.jpg
+/docs/_work/ch8pages/
