@@ -91,3 +91,12 @@ Thumbs.db
 /ch6/qa/*.jpg
 /docs/_work/ch6pages/
 /tools/pdfr6.py
+/ch7/p*/web/core.js
+/ch7/p*/web/kit.js
+/ch7/p*/web/scenes0_kit.js
+/ch7/p*/web/render.py
+/ch7/p*/web/sprites/
+/ch7/p*/web/fonts/
+/ch7/qa/try/
+/ch7/qa/*.jpg
+/docs/_work/ch7pages/

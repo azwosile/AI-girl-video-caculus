@@ -1,0 +1,24 @@
+# -*- coding: utf-8 -*-
+# 第 7 章 P10《积分策略：擂台第二轮》台词源（11-12，不审）。客串：Grok（X，主持）。Stewart 7e §7.5。
+# 核算：∫x/(x²−1) = ½ln|x²−1|；∫sin x/(1+cos²x) = −arctan(cos x)。
+import sys
+from pathlib import Path
+EP = Path(__file__).resolve().parent
+L = [
+ ('C01', 'steps', 'c_explain', '工具箱满了，拿到题先用哪件？Stewart 给了四步策略。', '工具箱已经满了。拿到一道题，先用哪一件？课本给了四步策略。'),
+ ('C02', 'steps', 'c_point', '① 化简被积函数；② 找明显的换元；③ 按类型分类；④ 不行就再试：换元、分部、变形、组合。', '第一步，化简被积函数。第二步，找明显的换元。第三步，按类型分类。第四步，不行就再试一次，换元、分部、变形，或者组合起来。'),
+ ('X01', 'round', 'x_force', '擂台第二轮！六道题，只说招式，不许算！', '擂台第二轮！六道题，只说用什么招，不许算！'),
+ ('G01', 'round', 'gp_explain', '∫tan³x dx，三角积分；∫x ln x dx，分部；∫√(4 − x²) dx，三角代换。', '正切三次方，用三角积分。x 乘对数 x，用分部。根号四减 x 方，用三角代换。'),
+ ('C03', 'round', 'c_explain', '∫e^(√x) dx，先令 u = √x，再分部；∫dx/(x² − 5x + 6)，部分分式。', 'e 的根号 x 次方，先令 u 等于根号 x，再分部。x 方减五 x 加六分之一，用部分分式。'),
+ ('D01', 'trap', 'd_sparkle', '最后一题 ∫x/(x² − 1) dx，本鲸用部分分式！A、B 两个系数……', '最后一题，x 除以 x 方减一。本鲸用部分分式！先设 A 和 B 两个系数……'),
+ ('X02', 'trap', 'x_angry', '这是真的吗？绕远了！', None),
+ ('C04', 'trap', 'c_point', '分子 x 恰好是分母导数的一半。令 u = x² − 1，一行得 ½ln|x² − 1| + C。', '分子 x，恰好是分母导数的一半。令 u 等于 x 方减一，一行就得到二分之一 ln x 方减一的绝对值，加 C。'),
+ ('C05', 'trap', 'c_ok', '能凑微分就先凑，这就是第二步。', None),
+ ('C06', 'quiz', 'c_point', '随堂一题，三秒。', None),
+ ('C07', 'quiz', 'c_explain', '∫sin x/(1 + cos²x) dx 用哪招？', '正弦 x 除以一加余弦平方，积分用哪一招？'),
+ ('X03', 'quiz', 'x_thumb', '令 u = cos x，得 −arctan(cos x) + C。核实通过！', '令 u 等于余弦 x，得负反正切余弦 x，加 C。核实通过！'),
+ ('C08', 'outro', 'c_ok', '先化简，再找换元，然后分类，最后再试。', None),
+ ('C09', 'outro', 'c_explain', '下一段：Gemini 带大家查积分表、用 CAS，也看看算不出来的积分。', '下一段：Gemini 带大家查积分表，用计算机代数系统，也看看算不出来的积分。'),
+]
+if __name__ == '__main__':
+    sys.path.insert(0, str(EP.parent / 'shared')); import lines_footer; lines_footer.write(EP, L, EP.name)
