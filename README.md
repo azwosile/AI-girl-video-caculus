@@ -20,6 +20,7 @@
 | 第 7 章 · 积分技巧 | [ch7-v1.0](https://github.com/azwosile/AI-girl-video-caculus/releases/tag/ch7-v1.0) | 16（P0–P15） | 22′36″（1356.1 s） |
 | 第 8 章 · 积分的更多应用 | [ch8-v1.0](https://github.com/azwosile/AI-girl-video-caculus/releases/tag/ch8-v1.0) | 15（P0–P14） | 17′12″（1032.4 s） |
 | 第 9 章 · 微分方程 | [ch9-v1.0](https://github.com/azwosile/AI-girl-video-caculus/releases/tag/ch9-v1.0) | 17（P0–P16） | 23′29″（1408.7 s） |
+| 第 10 章 · 参数方程与极坐标 | [ch10-v1.0](https://github.com/azwosile/AI-girl-video-caculus/releases/tag/ch10-v1.0) | 16（P0–P15） | 21′45″（1304.6 s） |
 
 <details><summary>分段明细</summary>
 
@@ -166,6 +167,27 @@
 | P15 | 弹簧振动 | 99.6 s |
 | P16 | 收束：奶茶小测 | 79.2 s |
 
+**第 10 章**
+
+| 段 | 内容 | 时长 |
+|---|---|---|
+| P0 | 字母里的曲线 | 88.2 s |
+| P1 | 参数曲线：让点动起来 | 93.0 s |
+| P2 | 摆线、星形线、渐开线 | 92.3 s |
+| P3 | 参数曲线的切线与凹凸 | 89.9 s |
+| P4 | 参数曲线的面积与弧长 | 71.8 s |
+| P5 | 旋转曲面面积 | 60.1 s |
+| P6 | Bézier 曲线：字体的秘密 | 76.8 s |
+| P7 | 极坐标 | 73.1 s |
+| P8 | 极坐标作图：心形线与玫瑰线 | 69.1 s |
+| P9 | 极坐标曲线的切线 | 86.1 s |
+| P10 | 极坐标曲线族 | 68.6 s |
+| P11 | 极坐标面积、交点与弧长 | 89.1 s |
+| P12 | 圆锥曲线 | 89.7 s |
+| P13 | 曲率与曲率半径 | 91.7 s |
+| P14 | 极坐标圆锥曲线与行星轨道 | 94.9 s |
+| P15 | 收束：月下小测 | 70.3 s |
+
 </details>
 
 ## 目录结构
@@ -213,6 +235,7 @@ AI娘微积分课/
 ├─ ch7/                      第 7 章工程（结构同第 6 章；shared/ 多一个 c7kit.js：擂台横幅、答题卡、工具格、积分表、梯形 / 辛普森近似；qa/ 里有批处理、联系表、出片脚本）
 ├─ ch8/                      第 8 章工程（结构同第 7 章；shared/ 多一个 c8kit.js：服务器繁忙窗口、排队人群、极坐标曲线与扇形、跷跷板与质点、旋转圆环；qa/ 里有批处理、联系表、出片脚本）
 ├─ ch9/                      第 9 章工程（结构同第 8 章；shared/ 多一个 c9kit.js：方向场、解曲线、欧拉折线、水箱、温度计与茶杯、RL 电路、兔狼图标与相平面、弹簧振子、特征根复平面；qa/ 里有批处理、联系表、出片脚本）
+├─ ch10/                     第 10 章工程（结构同第 9 章；shared/ 多一个 c10kit.js：参数描点、滚轮（摆线、星形线）、解绳渐开线、Bézier 与 de Casteljau、得意黑字形轮廓、极坐标扫描与扇形、密切圆、圆锥切面、轨道与火箭；glyphs10.json 为字形控制点）
 └─ tools/
    ├─ concat_release.py      把各段成片拼成每章合集（无损，带章节标记）；用法 concat_release.py 3
    └─ gh_release.py          创建 Release 并上传合集与分段；用法 gh_release.py 3
